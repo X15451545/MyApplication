@@ -1,13 +1,21 @@
 package abc123.gmail.com;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class Bookkeeping extends AppCompatActivity implements View.OnClickListener {
 
@@ -16,6 +24,14 @@ public class Bookkeeping extends AppCompatActivity implements View.OnClickListen
 
     TextView theDate, theTime;
     Button btSave;
+
+
+    SimpleDateFormat df = new SimpleDateFormat("hha", Locale.US);
+    // 設定時間顯示的格式
+    SimpleDateFormat df2 = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+    // 設定日期顯示的格式
+
+    Calendar c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +60,10 @@ public class Bookkeeping extends AppCompatActivity implements View.OnClickListen
     }
 
     private void varInit() {
+        c = Calendar.getInstance();
+
+        theTime.setText(df.format(c.getTime()));
+        theDate.setText(df2.format(c.getTime()));
     }
 
     private void setUiListener() { // ui監聽 寫在onStart()中
@@ -99,6 +119,31 @@ public class Bookkeeping extends AppCompatActivity implements View.OnClickListen
                 // 返回主畫面
                 startActivity(new Intent(this, MainActivity.class));
                 // Bookkeeping.this.finish();
+                break;
+            case R.id.textView6:
+                // 設定日期
+                new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                        c.set(Calendar.YEAR, year);
+                        c.set(Calendar.MONTH, month);
+                        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        theDate.setText(df2.format(c.getTime()));
+                    }
+                },
+                        c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+                break;
+            case R.id.textView7:
+                // 設定時間
+                new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+                        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        c.set(Calendar.MINUTE, minute);
+                        theTime.setText(df.format(c.getTime()));
+                    }
+                },
+                        c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true).show();
                 break;
         }
     }
