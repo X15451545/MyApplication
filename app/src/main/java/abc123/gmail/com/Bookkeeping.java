@@ -1,13 +1,11 @@
 package abc123.gmail.com;
 
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
@@ -16,7 +14,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class Bookkeeping extends AppCompatActivity implements View.OnClickListener, DatePickerFragment.OnDatePickerFragmentListener {
+public class Bookkeeping extends AppCompatActivity implements View.OnClickListener,
+        DatePickerFragment.OnDatePickerFragmentListener,
+        TimePickerFragment.OnTimePickerFragmentListener {
 
     final String TAG = this.getClass().getSimpleName();
     static int count = 0;
@@ -140,15 +140,18 @@ public class Bookkeeping extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.textView7:
                 // 設定時間
-                new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
-                        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        c.set(Calendar.MINUTE, minute);
-                        theTime.setText(df.format(c.getTime()));
-                    }
-                },
-                        c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true).show();
+                c.set(Calendar.HOUR_OF_DAY, 8);
+                DialogFragment TimeFragment = new TimePickerFragment();
+                TimeFragment.show(getSupportFragmentManager(), "timePicker");
+//                new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+//                    @Override
+//                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+//                        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+//                        c.set(Calendar.MINUTE, minute);
+//                        theTime.setText(df.format(c.getTime()));
+//                    }
+//                },
+//                        c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true).show();
                 break;
         }
     }
@@ -157,6 +160,12 @@ public class Bookkeeping extends AppCompatActivity implements View.OnClickListen
     public void onDateSet(Calendar c) {
         this.c.setTimeInMillis(c.getTimeInMillis());
         theDate.setText(df2.format(c.getTime()));
+    }
+
+    @Override
+    public void onTimeSet(Calendar c) {
+        this.c.setTimeInMillis(c.getTimeInMillis());
+        theTime.setText(df.format(c.getTime()));
     }
 }
 
